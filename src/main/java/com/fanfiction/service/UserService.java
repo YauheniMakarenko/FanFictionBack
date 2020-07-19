@@ -106,7 +106,7 @@ public class UserService implements UserDetailsService {
         user.setActivationCode(UUID.randomUUID().toString());
         userRepository.save(user);
         String message = "Hello, " + user.getUsername() + "!" + "\n" +
-                "Welcome to Fanfiction. Please visit the next link: http://localhost:8080/api/auth/activate/"
+                "Welcome to Fanfiction. Please visit the next link: https://fanfictionfback.herokuapp.com/api/auth/activate/"
                 + user.getActivationCode();
         mailSender.send(user.getEmail(), "Activation code", message);
     }

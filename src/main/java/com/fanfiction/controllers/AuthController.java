@@ -39,7 +39,7 @@ public class AuthController {
     @GetMapping("/activate/{code}")
     public void activate(@PathVariable String code, HttpServletResponse httpResponse) throws IOException {
         userService.activateUser(code);
-        httpResponse.sendRedirect("http://localhost:4200");
+        httpResponse.sendRedirect("https://fanfictionfront.herokuapp.com/");
     }
 
 }
