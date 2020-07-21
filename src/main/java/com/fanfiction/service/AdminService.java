@@ -1,15 +1,19 @@
 package com.fanfiction.service;
 
+import com.fanfiction.models.ERole;
 import com.fanfiction.models.User;
 import com.fanfiction.DTO.UserJwtDTO;
 import com.fanfiction.models.Role;
+import com.fanfiction.repository.RoleRepository;
 import com.fanfiction.repository.UserRepository;
 import com.fanfiction.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,6 +21,9 @@ public class AdminService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -29,10 +36,11 @@ public class AdminService {
         userRepository.deleteById(userId);
     }
 
-    public void setRole(Long userId, Role role){
+    public void setRole(Long userId, ERole role){
         User user = userRepository.findById(userId).get();
-        user.getRoles().clear();
-        user.getRoles().add(role);
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleRepository.findByName(role).get());
+        user.setRoles(roles);
         userRepository.save(user);
     }
 

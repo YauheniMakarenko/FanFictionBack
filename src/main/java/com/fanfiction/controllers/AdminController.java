@@ -34,19 +34,19 @@ public class AdminController {
     @PostMapping("setadmin")
     @PreAuthorize("hasRole('ADMIN')")
     public void setAdminRole(@RequestBody Long userId) {
-        adminService.setRole(userId, new Role(2, ERole.ROLE_ADMIN));
+        adminService.setRole(userId, ERole.ROLE_ADMIN);
     }
 
     @PostMapping("blockuser")
     @PreAuthorize("hasRole('ADMIN')")
     public void blockUser(@RequestBody Long userId) {
-        adminService.setRole(userId, new Role(3, ERole.ROLE_NOUSER));
+        adminService.setRole(userId, ERole.ROLE_NOUSER);
     }
 
     @PostMapping("setuserrole")
     @PreAuthorize("hasRole('ADMIN')")
     public void setUserRole(@RequestBody Long userId) {
-        adminService.setRole(userId, new Role(1, ERole.ROLE_USER));
+        adminService.setRole(userId, ERole.ROLE_USER);
     }
 
     @GetMapping("getuser/{userId}")
