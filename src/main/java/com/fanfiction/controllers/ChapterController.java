@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/test")
 public class ChapterController {

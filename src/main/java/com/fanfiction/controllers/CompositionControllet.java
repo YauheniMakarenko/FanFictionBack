@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/test")
 public class CompositionControllet {
