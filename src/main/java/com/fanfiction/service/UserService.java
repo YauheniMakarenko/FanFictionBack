@@ -4,7 +4,7 @@ import com.fanfiction.DTO.UserJwtDTO;
 import com.fanfiction.models.ERole;
 import com.fanfiction.models.Role;
 import com.fanfiction.models.User;
-import com.fanfiction.payload.request.EditNameRequest;
+import com.fanfiction.DTO.UserDTO;
 import com.fanfiction.payload.request.LoginRequest;
 import com.fanfiction.payload.request.SignupRequest;
 import com.fanfiction.payload.response.MessageResponse;
@@ -125,14 +125,14 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
-    public ResponseEntity<?> editUserName(EditNameRequest editNameRequest) {
-        if (userRepository.existsByUsername(editNameRequest.getUsername())) {
+    public ResponseEntity<?> editUserName(UserDTO USERDTO) {
+        if (userRepository.existsByUsername(USERDTO.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body("Error: Username is already taken!");
         }
-        User user = userRepository.findById(editNameRequest.getId()).get();
-        user.setUsername(editNameRequest.getUsername());
+        User user = userRepository.findById(USERDTO.getId()).get();
+        user.setUsername(USERDTO.getUsername());
         userRepository.save(user);
         return ResponseEntity.ok(new UserJwtDTO(jwtUtils.generateJwtTokenByUsername(user.getUsername())));
     }

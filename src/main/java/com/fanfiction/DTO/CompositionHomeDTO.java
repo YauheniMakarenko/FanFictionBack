@@ -1,35 +1,23 @@
 package com.fanfiction.DTO;
 
 import com.fanfiction.models.Genre;
-import com.fanfiction.models.User;
 
 import java.util.Set;
 
-public class CompositionDTO {
+public class CompositionHomeDTO {
 
     private Long id;
     private String title;
     private String description;
-    private Set<GenreNewCompositionDTO> genres;
-    private User author;
+    private String publicationDate;
+    private Set<Genre> genres;
 
-    public CompositionDTO() {
-    }
-
-    public CompositionDTO(Long id, String title, String description, Set<GenreNewCompositionDTO> genres, User author) {
+    public CompositionHomeDTO(Long id, String title, String description, String publicationDate, Set<Genre> genres) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.publicationDate = publicationDate;
         this.genres = genres;
-        this.author = author;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
     }
 
     public Long getId() {
@@ -56,11 +44,19 @@ public class CompositionDTO {
         this.description = description;
     }
 
-    public Set<GenreNewCompositionDTO> getGenres() {
+    public String getPublicationDate() {
+        return publicationDate;
+    }
+
+    public void setPublicationDate(String publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public Set<Genre> getGenres() {
         return genres;
     }
 
-    public void setGenres(Set<GenreNewCompositionDTO> genres) {
+    public void setGenres(Set<Genre> genres) {
         this.genres = genres;
     }
 }

@@ -1,24 +1,15 @@
-package com.fanfiction.models;
+package com.fanfiction.DTO;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
+public class GenreNewCompositionDTO {
 
-@Entity
-@Table(name= "genre")
-public class Genre {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 100)
     private String genrename;
 
-    public Genre(Long id, @Size(max = 100) String genrename) {
+    public GenreNewCompositionDTO(Long id, String genrename) {
         this.id = id;
         this.genrename = genrename;
     }
 
-    public Genre() {
-    }
 
     public Long getId() {
         return id;

@@ -1,8 +1,6 @@
 package com.fanfiction.controllers;
 
 import com.fanfiction.DTO.CommentsDTO;
-import com.fanfiction.models.Comments;
-import com.fanfiction.payload.request.CommentRequest;
 import com.fanfiction.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -33,7 +31,7 @@ public class CommentController {
 
     @PostMapping("/addcomment")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public void saveComment(@RequestBody CommentRequest commentRequest, Authentication authentication){
-        this.template.convertAndSend("/message", commentService.saveComment(commentRequest, authentication));
+    public void saveComment(@RequestBody CommentsDTO commentsDTO, Authentication authentication){
+        this.template.convertAndSend("/message", commentService.saveComment(commentsDTO, authentication));
     }
 }

@@ -1,8 +1,8 @@
 package com.fanfiction.controllers;
 
+import com.fanfiction.DTO.GenreNewCompositionDTO;
 import com.fanfiction.models.Composition;
-import com.fanfiction.models.Genre;
-import com.fanfiction.payload.request.EditNameRequest;
+import com.fanfiction.DTO.UserDTO;
 import com.fanfiction.service.UserService;
 import com.fanfiction.service.CompositionService;
 import com.fanfiction.service.SearchService;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/test")
@@ -29,14 +28,14 @@ public class CommonController {
 	private SearchService searchService;
 
 	@GetMapping("/allGenres")
-	public List<String> getGenre() {
-		return compositionService.allGenre().stream().map(Genre::getGenrename).collect(Collectors.toList());
+	public List<GenreNewCompositionDTO> getGenre() {
+		return compositionService.allGenre();
 	}
 
 	@PostMapping("/edituser")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public ResponseEntity<?> updateUser(@RequestBody EditNameRequest editNameRequest){
-		return userService.editUserName(editNameRequest);
+	public ResponseEntity<?> updateUser(@RequestBody UserDTO USERDTO){
+		return userService.editUserName(USERDTO);
 	}
 
 	@GetMapping("search/{searchRequest}")

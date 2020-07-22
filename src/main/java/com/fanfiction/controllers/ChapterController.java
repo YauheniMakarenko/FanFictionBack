@@ -1,7 +1,7 @@
 package com.fanfiction.controllers;
 
 import com.fanfiction.models.Chapter;
-import com.fanfiction.payload.request.ChapterRequest;
+import com.fanfiction.DTO.ChapterDTO;
 import com.fanfiction.service.ChapterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,8 +20,8 @@ public class ChapterController {
 
     @PostMapping("/savechapter")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public Chapter saveChapter(@Valid @RequestBody ChapterRequest chapterRequest) throws IOException {
-        return chapterService.saveChapter(chapterRequest);
+    public Chapter saveChapter(@Valid @RequestBody ChapterDTO chapterDTO) throws IOException {
+        return chapterService.saveChapter(chapterDTO);
     }
 
     @GetMapping("allChapters/{code}")

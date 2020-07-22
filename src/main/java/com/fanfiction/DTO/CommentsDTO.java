@@ -1,6 +1,5 @@
 package com.fanfiction.DTO;
 
-import com.fanfiction.models.Composition;
 import com.fanfiction.models.User;
 
 
@@ -9,16 +8,13 @@ public class CommentsDTO {
     private Long id;
     private String text;
     private User commentUser;
-    private Composition composition;
+    private CompositionDTO compositionDTO;
 
-    public CommentsDTO() {
-    }
 
-    public CommentsDTO(Long id, String text, User commentUser, Composition composition) {
+    public CommentsDTO(Long id, String text, User commentUser) {
         this.id = id;
         this.text = text;
         this.commentUser = commentUser;
-        this.composition = composition;
     }
 
     public Long getId() {
@@ -45,11 +41,11 @@ public class CommentsDTO {
         this.commentUser = commentUser;
     }
 
-    public Composition getComposition() {
-        return composition;
+    public CompositionDTO getCompositionDTO() {
+        return compositionDTO;
     }
 
-    public void setComposition(Composition composition) {
-        this.composition = composition;
+    public void setCompositionDTO(CompositionDTO compositionDTO) {
+        this.compositionDTO = compositionDTO;
     }
 }

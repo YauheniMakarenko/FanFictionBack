@@ -1,6 +1,6 @@
-package com.fanfiction.payload.request;
+package com.fanfiction.DTO;
 
-public class ChapterRequest {
+public class ChapterDTO {
 
     private Long id;
     private String chaptername;

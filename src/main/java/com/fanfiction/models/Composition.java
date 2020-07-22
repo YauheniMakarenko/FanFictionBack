@@ -1,6 +1,7 @@
 package com.fanfiction.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
@@ -36,6 +37,14 @@ public class Composition {
     private String publicationDate;
 
     public Composition() {
+    }
+
+    public Composition(Long id, @Size(max = 510) String description, @Size(max = 100) String title, Set<Genre> genres, User author) {
+        this.id = id;
+        this.description = description;
+        this.title = title;
+        this.genres = genres;
+        this.author = author;
     }
 
     public Long getId() {
@@ -85,4 +94,5 @@ public class Composition {
     public void setPublicationDate(String publicationDate) {
         this.publicationDate = publicationDate;
     }
+
 }

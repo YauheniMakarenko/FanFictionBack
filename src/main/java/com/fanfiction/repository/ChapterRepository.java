@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface ChapterRepository extends JpaRepository<Chapter, Long> {
     List<Chapter> findAllByComposition(Composition composition);
+
+    List<Chapter> findAllByCompositionId(Long id);
 }

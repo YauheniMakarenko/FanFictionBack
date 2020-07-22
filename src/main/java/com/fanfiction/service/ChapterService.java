@@ -4,7 +4,7 @@ import com.fanfiction.models.Composition;
 import com.fanfiction.repository.ChapterRepository;
 import com.fanfiction.repository.CompositionRepository;
 import com.fanfiction.models.Chapter;
-import com.fanfiction.payload.request.ChapterRequest;
+import com.fanfiction.DTO.ChapterDTO;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,22 +29,22 @@ public class ChapterService {
     public CompositionRepository compositionRepository;
 
 
-    public Chapter saveChapter(ChapterRequest chapterRequest) throws IOException {
-        if (chapterRequest.getChaptername() == null || chapterRequest.getChaptername().equals("")) {
+    public Chapter saveChapter(ChapterDTO chapterDTO) throws IOException {
+        if (chapterDTO.getChaptername() == null || chapterDTO.getChaptername().equals("")) {
             return null;
         }
         Chapter chapter = new Chapter();
-        chapter.setId(chapterRequest.getId());
-        chapter.setChaptername(chapterRequest.getChaptername());
-        chapter.setText(chapterRequest.getText());
+        chapter.setId(chapterDTO.getId());
+        chapter.setChaptername(chapterDTO.getChaptername());
+        chapter.setText(chapterDTO.getText());
 
-        Composition composition = compositionService.findCompositionById(chapterRequest.getCompositionId());
+        Composition composition = compositionRepository.findById(chapterDTO.getCompositionId()).get();
         composition.setPublicationDate(String.valueOf(new java.sql.Timestamp(new Date().getTime())).replaceAll("\\.\\d+", ""));
         compositionRepository.save(composition);
 
         chapter.setComposition(composition);
-        chapter.setNumberChapter(chapterRequest.getNumberChapter());
-        if (chapterRequest.getImgUrl() != null) {
+        chapter.setNumberChapter(chapterDTO.getNumberChapter());
+        if (chapterDTO.getImgUrl() != null) {
             Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                     "cloud_name", "dtvwmubpz",
                     "api_key", "973587197564797",
@@ -55,14 +55,14 @@ public class ChapterService {
                     "notification_url", "https://api.cloudinary.com/v1_1/dtvwmubpz/image/upload",
                     "resource_type", "image"
             );
-            chapter.setImgUrl(cloudinary.uploader().upload(chapterRequest.getImgUrl(), params).get("secure_url").toString());
+            chapter.setImgUrl(cloudinary.uploader().upload(chapterDTO.getImgUrl(), params).get("secure_url").toString());
         }
         chapterRepository.save(chapter);
         return chapter;
     }
 
     public List<Chapter> allChaptersByComposition(Long code) {
-        return chapterRepository.findAllByComposition(compositionService.findCompositionById(code)).stream()
+        return chapterRepository.findAllByCompositionId(code).stream()
                 .sorted((chapter1, chapter2) -> Integer.parseInt(String.valueOf(chapter1.getNumberChapter() - chapter2.getNumberChapter())))
                 .collect(Collectors.toList());
     }
