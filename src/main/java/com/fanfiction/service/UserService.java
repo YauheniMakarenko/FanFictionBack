@@ -12,6 +12,21 @@ import com.fanfiction.repository.RoleRepository;
 import com.fanfiction.repository.UserRepository;
 import com.fanfiction.security.jwt.JwtUtils;
 import com.fanfiction.security.securityservice.UserDetailsImpl;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.vk.api.sdk.client.Lang;
+import com.vk.api.sdk.client.TransportClient;
+import com.vk.api.sdk.client.VkApiClient;
+import com.vk.api.sdk.client.actors.UserActor;
+import com.vk.api.sdk.exceptions.ApiException;
+import com.vk.api.sdk.exceptions.ClientException;
+import com.vk.api.sdk.httpclient.HttpTransportClient;
+import com.vk.api.sdk.objects.UserAuthResponse;
+import com.vk.api.sdk.objects.users.UserXtrCounters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +40,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +49,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
+
+    private final HttpTransport TRANSPORT = new NetHttpTransport();
+    private final JacksonFactory JSON_FACTORY = new JacksonFactory();
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -135,5 +154,60 @@ public class UserService implements UserDetailsService {
         user.setUsername(USERDTO.getUsername());
         userRepository.save(user);
         return ResponseEntity.ok(new UserJwtDTO(jwtUtils.generateJwtTokenByUsername(user.getUsername())));
+    }
+
+    public ResponseEntity<UserJwtDTO> authGoogle(String googleCode) throws IOException {
+        GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(TRANSPORT, JSON_FACTORY,
+                "30011668004-ta3r286f4buks2ed9rsqbc8nhoo4qaum.apps.googleusercontent.com"
+                , "TpFc2Rg2HTgH4fXyc1kSqHg4"
+                , "4/" + googleCode, "https://fanfictionfront.herokuapp.com/google/auth")
+                .execute();
+        GoogleIdToken idToken = tokenResponse.parseIdToken();
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleRepository.findByName(ERole.ROLE_USER).get());
+        return oauthUser(
+                idToken.getPayload().get("given_name") + " " + idToken.getPayload().get("family_name"),
+                idToken.getPayload().getEmail(), roles
+        );
+    }
+
+    public ResponseEntity<UserJwtDTO> authVk(String vkCode) throws ClientException, ApiException {
+        TransportClient transportClient = new HttpTransportClient();
+        VkApiClient vk = new VkApiClient(transportClient);
+        UserAuthResponse authResponse = vk.oauth()
+                .userAuthorizationCodeFlow(7549235, "GgYyV1UBFF7Qft8Qy0M5",
+                        "https://fanfictionfront.herokuapp.com/vk/auth", vkCode)
+                .execute();
+        UserXtrCounters authUser = vk.users()
+                .get(new UserActor(authResponse.getUserId(), authResponse.getAccessToken()))
+                .fields()
+                .lang(Lang.EN)
+                .execute().get(0);
+        String authUsername = authUser.getFirstName() + " " + authUser.getLastName();
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleRepository.findByName(ERole.ROLE_USER).get());
+        return oauthUser(authUsername, authResponse.getEmail(), roles);
+    }
+
+
+    private ResponseEntity<UserJwtDTO> oauthUser(String authUsername, String email, Set<Role> roles) {
+        if (!userRepository.existsByUsername(authUsername)) {
+            User user = new User(authUsername, email, encoder.encode("auth"));
+            user.setRoles(roles);
+            User savedUser = userRepository.save(user);
+            return ResponseEntity.ok(new UserJwtDTO(jwtUtils.generateJwtTokenByUsername(authUsername),
+                    savedUser.getId(),
+                    authUsername,
+                    user.getEmail(),
+                    roles.stream().map(role -> role.getName().toString()).collect(Collectors.toList()))
+            );
+        }
+        User user = userRepository.findByUsername(authUsername).get();
+        return ResponseEntity.ok(new UserJwtDTO(jwtUtils.generateJwtTokenByUsername(user.getUsername()),
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRoles().stream().map(role -> role.getName().toString()).collect(Collectors.toList())
+        ));
     }
 }

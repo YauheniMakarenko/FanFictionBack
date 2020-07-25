@@ -59,5 +59,4 @@ public class Comments {
     public void setComposition(Composition composition) {
         this.composition = composition;
     }
-
 }
