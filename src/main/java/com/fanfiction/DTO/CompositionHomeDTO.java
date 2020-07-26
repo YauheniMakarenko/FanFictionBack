@@ -2,6 +2,7 @@ package com.fanfiction.DTO;
 
 import com.fanfiction.models.Genre;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class CompositionHomeDTO {
@@ -58,5 +59,22 @@ public class CompositionHomeDTO {
 
     public void setGenres(Set<Genre> genres) {
         this.genres = genres;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CompositionHomeDTO that = (CompositionHomeDTO) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(publicationDate, that.publicationDate) &&
+                Objects.equals(genres, that.genres);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, publicationDate, genres);
     }
 }

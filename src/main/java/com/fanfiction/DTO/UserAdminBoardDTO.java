@@ -1,5 +1,7 @@
 package com.fanfiction.DTO;
 
+import java.util.Objects;
+
 public class UserAdminBoardDTO  {
 
     private Long id;
@@ -44,5 +46,21 @@ public class UserAdminBoardDTO  {
 
     public void setRoles(String roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserAdminBoardDTO that = (UserAdminBoardDTO) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(username, that.username) &&
+                Objects.equals(email, that.email) &&
+                Objects.equals(roles, that.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, email, roles);
     }
 }

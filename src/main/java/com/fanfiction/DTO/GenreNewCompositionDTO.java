@@ -1,5 +1,7 @@
 package com.fanfiction.DTO;
 
+import java.util.Objects;
+
 public class GenreNewCompositionDTO {
 
     private Long id;
@@ -27,4 +29,17 @@ public class GenreNewCompositionDTO {
         this.genrename = genrename;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GenreNewCompositionDTO that = (GenreNewCompositionDTO) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(genrename, that.genrename);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, genrename);
+    }
 }

@@ -1,6 +1,7 @@
 package com.fanfiction.DTO;
 
 import java.util.List;
+import java.util.Objects;
 
 public class UserJwtDTO {
 	private String token;
@@ -64,5 +65,23 @@ public class UserJwtDTO {
 
 	public List<String> getRoles() {
 		return roles;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		UserJwtDTO that = (UserJwtDTO) o;
+		return Objects.equals(token, that.token) &&
+				Objects.equals(type, that.type) &&
+				Objects.equals(id, that.id) &&
+				Objects.equals(username, that.username) &&
+				Objects.equals(email, that.email) &&
+				Objects.equals(roles, that.roles);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(token, type, id, username, email, roles);
 	}
 }
