@@ -1,12 +1,12 @@
 package com.fanfiction.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import com.fanfiction.DTO.ChapterDTO;
+import com.fanfiction.models.Chapter;
 import com.fanfiction.models.Composition;
 import com.fanfiction.repository.ChapterRepository;
 import com.fanfiction.repository.CompositionRepository;
-import com.fanfiction.models.Chapter;
-import com.fanfiction.DTO.ChapterDTO;
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +23,10 @@ public class ChapterService {
     private ChapterRepository chapterRepository;
 
     @Autowired
-    private CompositionService compositionService;
-
-    @Autowired
     public CompositionRepository compositionRepository;
 
 
-    public Chapter saveChapter(ChapterDTO chapterDTO) throws IOException {
-        if (chapterDTO.getChaptername() == null || chapterDTO.getChaptername().equals("")) {
-            return null;
-        }
+    public void saveChapter(ChapterDTO chapterDTO) throws IOException {
         Chapter chapter = new Chapter();
         chapter.setId(chapterDTO.getId());
         chapter.setChaptername(chapterDTO.getChaptername());
@@ -58,7 +52,6 @@ public class ChapterService {
             chapter.setImgUrl(cloudinary.uploader().upload(chapterDTO.getImgUrl(), params).get("secure_url").toString());
         }
         chapterRepository.save(chapter);
-        return chapter;
     }
 
     public List<Chapter> allChaptersByComposition(Long code) {

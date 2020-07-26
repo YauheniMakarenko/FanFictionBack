@@ -20,8 +20,8 @@ public class ChapterController {
 
     @PostMapping("/savechapter")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public Chapter saveChapter(@Valid @RequestBody ChapterDTO chapterDTO) throws IOException {
-        return chapterService.saveChapter(chapterDTO);
+    public void saveChapter(@Valid @RequestBody ChapterDTO chapterDTO) throws IOException {
+        chapterService.saveChapter(chapterDTO);
     }
 
     @GetMapping("allChapters/{code}")

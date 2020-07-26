@@ -1,4 +1,4 @@
-package com.fanfiction.security;
+package com.fanfiction.config;
 
 import com.fanfiction.security.jwt.AuthEntryPointJwt;
 import com.fanfiction.security.jwt.AuthTokenFilter;

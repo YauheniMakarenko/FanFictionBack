@@ -1,9 +1,8 @@
 package com.fanfiction.controllers;
 
+import com.fanfiction.DTO.UserAdminBoardDTO;
 import com.fanfiction.models.ERole;
 import com.fanfiction.DTO.UserJwtDTO;
-import com.fanfiction.models.Role;
-import com.fanfiction.models.User;
 import com.fanfiction.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +19,7 @@ public class AdminController {
 
     @GetMapping("getAllUsers")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<User> getAllUsers() {
+    public List<UserAdminBoardDTO> getAllUsers() {
         return adminService.getAllUsers();
     }
 

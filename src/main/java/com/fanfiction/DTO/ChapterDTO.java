@@ -9,6 +9,15 @@ public class ChapterDTO {
     private Long compositionId;
     private int numberChapter;
 
+    public ChapterDTO(Long id, String chaptername, String text, String imgUrl, Long compositionId, int numberChapter) {
+        this.id = id;
+        this.chaptername = chaptername;
+        this.text = text;
+        this.imgUrl = imgUrl;
+        this.compositionId = compositionId;
+        this.numberChapter = numberChapter;
+    }
+
     public Long getId() {
         return id;
     }

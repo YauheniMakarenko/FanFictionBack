@@ -128,7 +128,6 @@
 			<artifactId>sdk</artifactId>
 			<version>0.5.12</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>

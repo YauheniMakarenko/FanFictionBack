@@ -1,5 +1,6 @@
 package com.fanfiction.service;
 
+import com.fanfiction.DTO.UserAdminBoardDTO;
 import com.fanfiction.models.*;
 import com.fanfiction.DTO.UserJwtDTO;
 import com.fanfiction.repository.*;
@@ -34,8 +35,11 @@ public class AdminService {
     @Autowired
     private JwtUtils jwtUtils;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserAdminBoardDTO> getAllUsers() {
+        return userRepository.findAll().stream().map(user -> new UserAdminBoardDTO(user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRoles().iterator().next().getName().name())).collect(Collectors.toList());
     }
 
     public void deleteUser(Long userId) {
