@@ -8,6 +8,7 @@ import com.fanfiction.models.Composition;
 import com.fanfiction.repository.ChapterRepository;
 import com.fanfiction.repository.CompositionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,6 +26,13 @@ public class ChapterService {
     @Autowired
     public CompositionRepository compositionRepository;
 
+    @Value("${spring.cloudinary.api_key}")
+    private String api_key;
+    @Value("${spring.cloudinary.api_secret}")
+    private String api_secret;
+    @Value("${spring.cloudinary.notification_url}")
+    private String notification_url;
+
 
     public void saveChapter(ChapterDTO chapterDTO) throws IOException {
         Chapter chapter = new Chapter();
@@ -41,12 +49,12 @@ public class ChapterService {
         if (chapterDTO.getImgUrl() != null) {
             Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
                     "cloud_name", "dtvwmubpz",
-                    "api_key", "973587197564797",
-                    "api_secret", "nPzYrt2m8xuYvYf7sxCzkqZfB-8"));
+                    "api_key", api_key,
+                    "api_secret", api_secret));
             Map params = ObjectUtils.asMap(
                     "public_id", chapter.toString(),
                     "overwrite", true,
-                    "notification_url", "https://api.cloudinary.com/v1_1/dtvwmubpz/image/upload",
+                    "notification_url", notification_url,
                     "resource_type", "image"
             );
             chapter.setImgUrl(cloudinary.uploader().upload(chapterDTO.getImgUrl(), params).get("secure_url").toString());

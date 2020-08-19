@@ -57,10 +57,6 @@ public class CommonController {
 
 	@GetMapping("exportToPdf/{compositionId}")
 	public void exportPdf(@PathVariable Long compositionId, HttpServletResponse response) throws IOException, DocumentException{
-
-/*		response.setContentType("application/pdf");
-
-		response.setHeader("Content-disposition","inline; filename='composition.pdf'");*/
 		exportPdfService.exportPdf(compositionId, response);
 
 	}
